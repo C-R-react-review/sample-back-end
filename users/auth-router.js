@@ -12,41 +12,41 @@ router.post('/register', validateUserContent, (req, res) => {
     let user = req.body;
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash
-
+    console.log(user)
     Users.add(user)
-    .then(saved => {
-        const token = generateToken(saved);
-        res.status(201),json({
-            saved,
-            message: `${saved.username}`,
-            token,
+        .then(saved => {
+            const token = generateToken(saved);
+            res.status(201),json({
+                saved,
+                message: `${saved.username}`,
+                token,
+            });
+        })
+        .catch(error => {
+            res.status(500).json(error);
         });
-    })
-    .catch(error => {
-        res.status(500).json(error);
-    });
 })
 
 router.post('/login', validateUserContent, (req, res) => {
     let { username, password } = req.body
 
     Users.findById({ username })
-    .then(user => {
-        if (user && bcrypt.compareSync(password, user.password)) {
-            const token = generateToken(user)
+        .then(user => {
+            if (user && bcrypt.compareSync(password, user.password)) {
+                const token = generateToken(user)
 
-            res.status(200),json({
-                user,
-                message: `${user.username}`,
-                token,
-            })
-        } else {
-            res.status(401).json({message: "Invalid Username or Password"})
-        }
-    })
-    .catch(error => {
-        res.status(500).json(error)
-    })
+                res.status(200),json({
+                    user,
+                    message: `${user.username}`,
+                    token,
+                })
+            } else {
+                res.status(401).json({message: "Invalid Username or Password"})
+            }
+        })
+        .catch(error => {
+            res.status(500).json(error)
+        })
 
 })
 
