@@ -10,6 +10,8 @@ router.use(express.json())
 
 router.post('/register', validateUserContent, (req, res) => {
     let user = req.body;
+    const hash = bcrypt.hashSync(user.password, 10);
+    user.password = hash
 
     Users.add(user)
     .then(saved => {
@@ -30,7 +32,7 @@ router.post('/login', validateUserContent, (req, res) => {
 
     Users.findById({ username })
     .then(user => {
-        if (user && password == user.password) {
+        if (user && bcrypt.compareSync(password, user.password)) {
             const token = generateToken(user)
 
             res.status(200),json({
