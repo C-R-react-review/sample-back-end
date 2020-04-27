@@ -1,9 +1,12 @@
-const router = require('express').Router();
+const express = require('express')
+const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const secrets = require("../config/secrets.js");
 
 const Users = require('./users-model')
+
+router.use(express.json())
 
 router.post('/register', validateUserContent, (req, res) => {
     let user = req.body;

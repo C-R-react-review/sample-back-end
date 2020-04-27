@@ -8,7 +8,7 @@ module.exports = {
     destroy
 };
 
-function add(user) {
+async function add(user) {
     const [id] = await db("users").insert(user, 'id');
 
     return findById(id)
@@ -22,7 +22,7 @@ function findById(id) {
     return db('users').where({ id }).first();
 }
 
-function edit(user, id) {
+async function edit(user, id) {
     const [updated_user] = await db('users').where({ id }).update(user, 'id')
     return findById(updated_user)
 }
