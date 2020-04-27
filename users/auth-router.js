@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// secrets import
+const secrets = require("../config/secrets.js");
 
 const Users = require('./users-model')
 
-router.post('register', (req, res) => {
+router.post('/register', validateUserContent, (req, res) => {
     let user = req.body;
 
     Users.add(user)
@@ -21,3 +21,49 @@ router.post('register', (req, res) => {
         res.status(500).json(error);
     });
 })
+
+router.post('/login', validateUserContent, (req, res) => {
+    let { username, password } = req.body
+
+    Users.findById({ username })
+    .then(user => {
+        if (user && password == user.password) {
+            const token = generateToken(user)
+
+            res.status(200),json({
+                user,
+                message: `${user.username}`,
+                token,
+            })
+        } else {
+            res.status(401).json({message: "Invalid Username or Password"})
+        }
+    })
+    .catch(error => {
+        res.status(500).json(error)
+    })
+
+})
+
+function generateToken(user) {
+    const payload = {
+        subject: user.id,
+        username: username
+    };
+    const options = {
+        expiresIn: '1d'
+    };
+    return jwt.sign(payload, secrets.jwtSecret, options)
+}
+
+function validateUserContent(req, res, next) {
+    if (!req.body.username || !req.body.password) {
+        res.status(400),json({
+            message: 'Username & password fields are required'
+        })
+    } else {
+        next();
+    }
+}
+
+module.exports = router
