@@ -14,7 +14,6 @@ router.post('/register', validateUserContent, (req, res) => {
     user.password = hash
     Users.add(user)
     .then(saved => {
-        console.log(saved)
         const token = generateToken(saved);
             res.status(201),json({
                 saved,
