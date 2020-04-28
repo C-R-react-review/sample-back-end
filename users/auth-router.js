@@ -15,7 +15,7 @@ router.post('/register', validateUserContent, (req, res) => {
     Users.add(user)
     .then(saved => {
         const token = generateToken(saved);
-            res.status(201),json({
+            res.status(201).json({
                 saved,
                 message: `${saved.username}`,
                 token,
