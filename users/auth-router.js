@@ -47,6 +47,27 @@ router.post('/login', validateUserContent, (req, res) => {
 
 })
 
+router.post('/authenticate', (req, res) => {
+    const token = req.body.token
+    console.log(token)
+    const id = jwt.verify(token, secrets.jwtSecret).subject
+    console.log(id)
+    Users.findById(id)
+        .then(user => {
+            if (user) {
+                res.status(200).json({
+                    message: true,
+                })
+            } else {
+                res.status(401).json({message: false})
+            }
+        })
+        .catch(error => {
+            res.status(500).json(error)
+        })
+
+})
+
 function generateToken(user) {
     const payload = {
         subject: user.id,
