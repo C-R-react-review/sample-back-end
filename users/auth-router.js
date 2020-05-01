@@ -15,26 +15,24 @@ router.post('/register', validateUserContent, (req, res) => {
     Users.add(user)
     .then(saved => {
         const token = generateToken(saved);
-            res.status(201).json({
-                saved,
-                message: `${saved.username}`,
-                token,
-            });
-        })
-        .catch(error => {
-            res.status(500).json(error);
+        res.status(201).json({
+            saved,
+            message: `${saved.username}`,
+            token,
         });
+    })
+    .catch(error => {
+        res.status(500).json(error);
+    });
 })
 
 router.post('/login', validateUserContent, (req, res) => {
     let { username, password } = req.body
-
-    Users.findById({ username })
+    Users.findByUsername(username)
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 const token = generateToken(user)
-
-                res.status(200),json({
+                res.status(200).json({
                     user,
                     message: `${user.username}`,
                     token,
