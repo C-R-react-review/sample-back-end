@@ -4,6 +4,7 @@ module.exports = {
     add,
     find,
     findByUsername,
+    findById,
     edit,
     destroy
 };
@@ -18,6 +19,10 @@ function find() {
 
 function findByUsername(username) {
     return db('users').where({ username }).first();
+}
+
+function findById(id) {
+    return db('users').where({ id }).first();
 }
 
 async function edit(user, id) {
