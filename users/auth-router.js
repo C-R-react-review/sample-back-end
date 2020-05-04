@@ -13,13 +13,18 @@ router.post('/register', validateUserContent, (req, res) => {
     const hash = bcrypt.hashSync(user.password, 10);
     user.password = hash
     Users.add(user)
-    .then(saved => {
-        const token = generateToken(saved);
-        res.status(201).json({
-            saved,
-            message: `${saved.username}`,
-            token,
-        });
+    .then(savedId => {
+        console.log(savedId[0])
+        Users.findById(savedId[0])
+        .then(saved => {
+            console.log(saved)
+            const token = generateToken(saved);
+            res.status(201).json({
+                saved,
+                message: `${saved.username}`,
+                token,
+            });
+        })
     })
     .catch(error => {
         res.status(500).json(error);
@@ -36,22 +41,20 @@ router.post('/login', validateUserContent, (req, res) => {
                     user,
                     message: `${user.username}`,
                     token,
-                })
+                });
             } else {
                 res.status(401).json({message: "Invalid Username or Password"})
             }
         })
         .catch(error => {
             res.status(500).json(error)
-        })
-
+        });
 })
 
 router.post('/authenticate', (req, res) => {
     const token = req.body.token
     console.log(token)
     const id = jwt.verify(token, secrets.jwtSecret).subject
-    console.log(id)
     Users.findById(id)
         .then(user => {
             if (user) {
@@ -76,7 +79,8 @@ function generateToken(user) {
     const options = {
         expiresIn: '1d'
     };
-    return jwt.sign(payload, secrets.jwtSecret, options)
+    console.log(secrets.jwtSecret)
+    return jwt.sign(payload,  secrets.jwtSecret, options)
 }
 
 function validateUserContent(req, res, next) {
