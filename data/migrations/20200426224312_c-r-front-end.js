@@ -10,8 +10,15 @@ exports.up = function(knex) {
 
         users
             .string('email', 128)
-            .notNullable()
-            .unique();
+            .notNullable();
+
+        users
+            .string('age', 128)
+            .notNullable();
+
+        users
+            .string('location', 128)
+            .notNullable();
 
         users
             .string('password', 128)
