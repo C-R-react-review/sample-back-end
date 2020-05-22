@@ -25,9 +25,8 @@ function findById(id) {
     return db('users').where({ id }).first();
 }
 
-async function edit(user, id) {
-    const [updated_user] = await db('users').where({ id }).update(user, 'id')
-    return findById(updated_user)
+function edit(user, id) {
+    return db('users').where({ id }).update(user)
 }
 
 function destroy(id) {
