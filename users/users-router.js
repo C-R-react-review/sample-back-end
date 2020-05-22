@@ -24,4 +24,17 @@ router.get('/:id', (req, res) => {
         });
 });
 
+router.put('/:id', (req, res) => {
+    const id = req.params.id
+    Users.edit(req.body, id)
+        .then(user => {
+            console.log(user)
+            res.status(201).json(user)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json(err)
+        });
+});
+
 module.exports = router
