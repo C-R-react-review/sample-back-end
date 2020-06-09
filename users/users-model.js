@@ -1,7 +1,7 @@
-const db = require('../data/dbConfig')
-const jwt = require('jsonwebtoken')
+const db = require('../data/dbConfig');
+const jwt = require('jsonwebtoken');
 const secrets = require("../config/secrets.js");
-
+const {} = require("../helpers/helpers")
 
 module.exports = {
     add,
@@ -30,9 +30,8 @@ function findById(id) {
 }
 
 function findByToken(token) {
-    const decoded = jwt.verify(token, secrets.jwtSecret)
-    console.log(decoded)
-    // findById(decoded.id)
+    const decoded = jwt.verify(token, secrets.jwtSecret).subject
+    return findById(decoded)
 }
 
 function edit(user, id) {
