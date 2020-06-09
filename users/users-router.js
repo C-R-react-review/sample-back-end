@@ -24,6 +24,18 @@ router.get('/:id', (req, res) => {
         });
 });
 
+router.get('/dashboard/:token', (req, res) => {
+    const token = req.params.token
+
+    Users.findByToken(token)
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
+});
+
 router.put('/:id', (req, res) => {
     const id = req.params.id
     Users.edit(req.body, id)

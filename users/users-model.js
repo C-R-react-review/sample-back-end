@@ -1,10 +1,14 @@
 const db = require('../data/dbConfig')
+const jwt = require('jsonwebtoken')
+const secrets = require("../config/secrets.js");
+
 
 module.exports = {
     add,
     find,
     findByUsername,
     findById,
+    findByToken,
     edit,
     destroy
 };
@@ -23,6 +27,12 @@ function findByUsername(username) {
 
 function findById(id) {
     return db('users').where({ id }).first();
+}
+
+function findByToken(token) {
+    const decoded = jwt.verify(token, secrets.jwtSecret)
+    console.log(decoded)
+    // findById(decoded.id)
 }
 
 function edit(user, id) {
