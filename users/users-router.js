@@ -49,4 +49,29 @@ router.put('/:id', (req, res) => {
         });
 });
 
+router.get('/friends/:id', (req, res) => {
+    const id = req.params.id
+
+    Users.findFriendsById(id)
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
+});
+
+router.post('/friends/:id', (req, res) => {
+    const id = req.params.id
+    const friend = req.body.friend
+
+    Users.findFriendsById({ 'user_id': id, 'friend_id': friend })
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
+});
+
 module.exports = router
