@@ -10,7 +10,10 @@ module.exports = {
     findById,
     findByToken,
     edit,
-    destroy
+    destroy,
+    findFriendsById,
+    addFriend,
+    acceptFriend
 };
 
 function add(user) {
@@ -40,4 +43,16 @@ function edit(user, id) {
 
 function destroy(id) {
     return db('users').where({ id }).delete();
+}
+
+function addFriend(friendRequest) {
+    return db('friends').insert(friendRequest);
+}
+
+function acceptFriend(user_id, friend_id, friendRequest) {
+    return db('friends').where({ user_id }).andWhere({ friend_id }).update(friendRequest)
+}
+
+function findFriendsById(user_id) {
+    return db('friends').where({ user_id });
 }
