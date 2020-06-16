@@ -49,8 +49,8 @@ function addFriend(friendRequest) {
     return db('friends').insert(friendRequest);
 }
 
-function acceptFriend(user_id, friend_id, friendRequest) {
-    return db('friends').where({ user_id }).andWhere({ friend_id }).update(friendRequest)
+function acceptFriend(user_id, friend_id) {
+    return db('friends').where({ user_id }).andWhere({ friend_id }).update({ "accepted": true })
 }
 
 function findFriendsById(user_id) {
