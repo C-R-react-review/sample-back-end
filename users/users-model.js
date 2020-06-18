@@ -54,5 +54,8 @@ function acceptFriend(user_id, friend_id) {
 }
 
 function findFriendsById(user_id) {
-    return db('friends').where({ user_id });
+    return db('friends')
+    .where({ user_id })
+    .join('users', 'friends.friend_id', '=', 'users.id')
+    .select('friends.user_id', 'friends.friend_id', 'friends.accepted', 'users.first_name', 'users.last_name', 'users.username');
 }
